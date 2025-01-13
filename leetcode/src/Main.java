@@ -24,34 +24,29 @@ public class Main {
         addTwoNumbers(num1, num2);
     }
     public static ListNode addTwoNumbers(ListNode l1, ListNode l2) {
-        List<ListNode> result = new ArrayList<>();
+        ListNode result = new ListNode(0, null); // --> ref1
+        ListNode temp = result; // --> ref1
         int last = 0;
-        while(l1 != null || l2 != null) {
-            ListNode res = new ListNode();
 
-            int sum = (l1 != null ? l1.val : 0) + (l2 != null ? l2.val : 0) + last;
-            if (sum > 9) {
-                res.val = sum % 10;
-                last = sum / 10;
-            } else {
-                res.val = sum;
-                last = 0;
+        while(l1 != null || l2 != null || last > 0) {
+            int sum = last;
+
+            if (l1 != null) {
+                sum += l1.val;
+                l1 = l1.next;
             }
 
-            l1 = l1 != null ? l1.next : null;
-            l2 = l2 != null ? l2.next : null;
+            if (l2 != null) {
+                sum += l2.val;
+                l2 = l2.next;
+            }
 
-            result.add(res);
+            last = sum / 10;
+            temp.next = new ListNode(sum % 10,null); // --> ref2
+            temp = temp.next; // --> ref2
+            // ref1 => ref2 (i=1)
         }
 
-        if (last > 0) {
-            result.add(new ListNode(last));
-        }
-
-        for (int i= (result.size()-2); i>=0; i--) {
-            result.get(i).next = result.get(i+1);
-        }
-
-        return result.get(0);
+        return result.next;
     }
 }
